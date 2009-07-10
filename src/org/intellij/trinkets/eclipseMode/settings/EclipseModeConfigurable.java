@@ -38,7 +38,8 @@ public class EclipseModeConfigurable implements Configurable {
     public boolean isModified() {
         if (form != null) {
             EclipseModeSettings settings = EclipseMode.getInstance().getSettings();
-            return settings.INCREMENTAL_COMPILATION_ENABLED != form.isIncrementalCompilationEnabled();
+            return (settings.INCREMENTAL_COMPILATION_ENABLED != form.isIncrementalCompilationEnabled() ||
+                    settings.PREVENT_ERROR_TREE_FOCUS_GRAB != form.isPreventMessagesWindowFromGrabbingFocusOnErrors());
         }
         return false;
     }
@@ -47,6 +48,7 @@ public class EclipseModeConfigurable implements Configurable {
         if (form != null) {
             EclipseModeSettings settings = EclipseMode.getInstance().getSettings();
             settings.INCREMENTAL_COMPILATION_ENABLED = form.isIncrementalCompilationEnabled();
+            settings.PREVENT_ERROR_TREE_FOCUS_GRAB = form.isPreventMessagesWindowFromGrabbingFocusOnErrors();
         }
     }
 
@@ -54,6 +56,7 @@ public class EclipseModeConfigurable implements Configurable {
         if (form != null) {
             EclipseModeSettings settings = EclipseMode.getInstance().getSettings();
             form.setIncrementalCompilationEnabled(settings.INCREMENTAL_COMPILATION_ENABLED);
+            form.setPreventMessagesWindowFromGrabbingFocusOnErrors(settings.PREVENT_ERROR_TREE_FOCUS_GRAB);
         }
     }
 

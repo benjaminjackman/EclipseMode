@@ -19,6 +19,7 @@ import com.intellij.util.xmlb.XmlSerializerUtil;
                 )}
 )
 public class EclipseModeSettings implements PersistentStateComponent<EclipseModeSettings> {
+    public boolean PREVENT_ERROR_TREE_FOCUS_GRAB = true;
     public boolean INCREMENTAL_COMPILATION_ENABLED = true;
 
     public EclipseModeSettings getState() {

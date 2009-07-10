@@ -9,6 +9,7 @@ import javax.swing.*;
  */
 public class EclipseModeConfigurableForm {
     private JCheckBox enableIncrementalCompilationOnCheckBox;
+    private JCheckBox preventMessagesWindowFromGrabbingFocusOnErrors;
     private JPanel rootPanel;
 
     public JPanel getRootPanel() {
@@ -21,5 +22,12 @@ public class EclipseModeConfigurableForm {
 
     public boolean isIncrementalCompilationEnabled() {
         return enableIncrementalCompilationOnCheckBox.isSelected();
+    }
+    public void setPreventMessagesWindowFromGrabbingFocusOnErrors(boolean value) {
+        preventMessagesWindowFromGrabbingFocusOnErrors.setSelected(value);
+    }
+
+    public boolean isPreventMessagesWindowFromGrabbingFocusOnErrors() {
+        return preventMessagesWindowFromGrabbingFocusOnErrors.isSelected();
     }
 }
