@@ -1,0 +1,22 @@
+<!DOCTYPE idea-plugin PUBLIC "Plugin/DTD" "http://plugins.intellij.net/plugin.dtd">
+<idea-plugin>
+    <name>Eclipse Mode</name>
+    <id>EclipseMode</id>
+    <description>Enable Eclipse features in IntelliJ IDEA such as incremental compilation.</description>
+    <version>0.1.1</version>
+    <vendor>Alexey Efimov</vendor>
+    <idea-version since-build="9000"/>
+
+    <extensions xmlns="com.intellij">
+        <applicationService serviceInterface="org.intellij.trinkets.eclipseMode.settings.EclipseModeSettings"
+                            serviceImplementation="org.intellij.trinkets.eclipseMode.settings.EclipseModeSettings"/>
+        <applicationConfigurable implementation="org.intellij.trinkets.eclipseMode.settings.EclipseModeConfigurable"/>
+    </extensions>
+    
+    <application-components>
+        <component>
+            <implementation-class>org.intellij.trinkets.eclipseMode.EclipseMode</implementation-class>
+            <interface-class>org.intellij.trinkets.eclipseMode.EclipseMode</interface-class>
+        </component>
+    </application-components>
+</idea-plugin>
