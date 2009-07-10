@@ -1,5 +1,13 @@
 <!DOCTYPE idea-plugin PUBLIC "Plugin/DTD" "http://plugins.intellij.net/plugin.dtd">
 <idea-plugin>
+    <actions>
+        <action id="ToggleCompileOnSave" class="org.intellij.trinkets.eclipseMode.actions.ToggleCompileOnSaveAction"
+                text="Compile On Save"
+                description="Toggles whether the compile on save action is active for Eclipse Mode">
+            <add-to-group group-id="BuildMenu" anchor="after" relative-to-action="CompileProject"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt shift B"/>
+        </action>
+    </actions>
     <name>Eclipse Mode</name>
     <id>EclipseMode</id>
     <description>Enable Eclipse features in IntelliJ IDEA such as incremental compilation.</description>
