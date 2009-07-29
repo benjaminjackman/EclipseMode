@@ -24,17 +24,7 @@ import java.beans.VetoableChangeListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
 
-import java.awt.event.FocusListener;
-import java.awt.event.FocusEvent;
 import java.awt.*;
-import java.lang.reflect.Field;
-import java.io.IOException;
-import java.util.*;
-import java.util.Timer;
-
-import groovy.lang.GroovyShell;
-import groovy.ui.Console;
-
 import javax.swing.*;
 
 /**
@@ -99,31 +89,33 @@ public class SaveListener extends VirtualFileAdapter {
 
     private void executeMake(VirtualFileEvent event) {
         final Editor editor = DataKeys.EDITOR_EVEN_IF_INACTIVE.getData(DataManager.getInstance().getDataContext());
-        editor.getCaretModel().addCaretListener(new CaretListener() {
-            @Override
-            public void caretPositionChanged(CaretEvent e) {
-                if (!gotCaret && compiling) {
-                    System.out.println("Scanning for Error Window");
-                    try {
-                        throw new RuntimeException();
-                    } catch (RuntimeException ex) {
-                        boolean errorPanelBadness = false;
-                        for (StackTraceElement elem : ex.getStackTrace()) {
-                            if (elem.getClassName().equals("com.intellij.ide.errorTreeView.NewErrorTreeViewPanel")) {
-                                errorPanelBadness = true;
-                                break;
+        if (editor != null) {
+            editor.getCaretModel().addCaretListener(new CaretListener() {
+                @Override
+                public void caretPositionChanged(CaretEvent e) {
+                    if (!gotCaret && compiling) {
+                        System.out.println("Scanning for Error Window");
+                        try {
+                            throw new RuntimeException();
+                        } catch (RuntimeException ex) {
+                            boolean errorPanelBadness = false;
+                            for (StackTraceElement elem : ex.getStackTrace()) {
+                                if (elem.getClassName().equals("com.intellij.ide.errorTreeView.NewErrorTreeViewPanel")) {
+                                    errorPanelBadness = true;
+                                    break;
+                                }
                             }
-                        }
-                        if (errorPanelBadness) {
-                            gotCaret = true;
-                            System.out.println("GOTCHA2");
-                            e.getEditor().getCaretModel().moveToLogicalPosition(e.getOldPosition());
-                            e.getEditor().getCaretModel().removeCaretListener(this);
+                            if (errorPanelBadness) {
+                                gotCaret = true;
+                                System.out.println("GOTCHA2");
+                                e.getEditor().getCaretModel().moveToLogicalPosition(e.getOldPosition());
+                                e.getEditor().getCaretModel().removeCaretListener(this);
+                            }
                         }
                     }
                 }
-            }
-        });
+            });
+        }
 
 
         EclipseMode eclipseMode = EclipseMode.getInstance();
