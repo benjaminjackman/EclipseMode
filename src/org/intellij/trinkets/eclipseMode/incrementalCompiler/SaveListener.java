@@ -1,7 +1,23 @@
 package org.intellij.trinkets.eclipseMode.incrementalCompiler;
 
+import java.awt.KeyboardFocusManager;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyVetoException;
+import java.beans.VetoableChangeListener;
+
+import javax.swing.SwingUtilities;
+
+import org.intellij.trinkets.eclipseMode.EclipseMode;
+
 import com.intellij.compiler.impl.ModuleCompileScope;
-import com.intellij.openapi.compiler.*;
+import com.intellij.ide.DataManager;
+import com.intellij.openapi.actionSystem.DataKeys;
+import com.intellij.openapi.compiler.CompileContext;
+import com.intellij.openapi.compiler.CompileStatusNotification;
+import com.intellij.openapi.compiler.CompilerManager;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.event.CaretEvent;
+import com.intellij.openapi.editor.event.CaretListener;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -11,21 +27,6 @@ import com.intellij.openapi.vfs.VirtualFileAdapter;
 import com.intellij.openapi.vfs.VirtualFileCopyEvent;
 import com.intellij.openapi.vfs.VirtualFileEvent;
 import com.intellij.openapi.vfs.VirtualFileMoveEvent;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.event.CaretListener;
-import com.intellij.openapi.editor.event.CaretEvent;
-import com.intellij.openapi.actionSystem.DataKeys;
-import com.intellij.ide.DataManager;
-import com.intellij.pom.Navigatable;
-import org.intellij.trinkets.eclipseMode.EclipseMode;
-
-
-import java.beans.VetoableChangeListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyVetoException;
-
-import java.awt.*;
-import javax.swing.*;
 
 /**
  * VFS listener to handle save file event.
@@ -58,7 +59,7 @@ public class SaveListener extends VirtualFileAdapter {
         executeMake(event);
     }
 
-    int i =0;
+    int i = 0;
 
     {
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addVetoableChangeListener(new VetoableChangeListener() {
@@ -71,7 +72,7 @@ public class SaveListener extends VirtualFileAdapter {
                         System.out.println("por:" + evt.getPropertyName());
                         System.out.println("old:" + evt.getOldValue());
                         System.out.println("new:" + evt.getNewValue());
-                        
+
                         if (evt.getPropertyName().equals("focusOwner") && evt.getNewValue().toString().startsWith("com.intellij.ide.errorTreeView.NewErrorTreeViewPanel")) {
                             throw new PropertyVetoException("", evt);
                         }
@@ -80,7 +81,6 @@ public class SaveListener extends VirtualFileAdapter {
             }
         });
     }
-
 
     final java.util.Timer timer = new java.util.Timer();
     volatile boolean compiling = false;
@@ -114,23 +114,32 @@ public class SaveListener extends VirtualFileAdapter {
                         }
                     }
                 }
+
+                @Override
+                public void caretAdded(CaretEvent caretEvent) {
+
+                }
+
+                @Override
+                public void caretRemoved(CaretEvent caretEvent) {
+
+                }
             });
         }
-
 
         EclipseMode eclipseMode = EclipseMode.getInstance();
         if (event.isFromSave() && eclipseMode.getSettings().INCREMENTAL_COMPILATION_ENABLED) {
             Project[] projects = ProjectManager.getInstance().getOpenProjects();
             for (final Project project : projects) {
                 if (project.isInitialized() && !project.isDisposed() &&
-                        project.isOpen() && !project.isDefault()) {
+                      project.isOpen() && !project.isDefault()) {
                     ProjectFileIndex projectFileIndex = ProjectRootManager.getInstance(project).getFileIndex();
                     final Module module = projectFileIndex.getModuleForFile(event.getFile());
                     if (module != null) {
                         final CompilerManager compilerManager = CompilerManager.getInstance(project);
                         if (!compilerManager.isCompilationActive() &&
-                                !compilerManager.isExcludedFromCompilation(event.getFile()) &&
-                                !compilerManager.isUpToDate(new ModuleCompileScope(module, false))) {
+                              !compilerManager.isExcludedFromCompilation(event.getFile()) &&
+                              !compilerManager.isUpToDate(new ModuleCompileScope(module, false))) {
                             System.out.println("<=====================COMPILE STARTED================================>");
                             compiling = true;
                             gotCaret = false;
@@ -178,9 +187,17 @@ public class SaveListener extends VirtualFileAdapter {
                                                     }
                                                 }
                                             }
+
+                                            @Override
+                                            public void caretAdded(CaretEvent caretEvent) {
+
+                                            }
+
+                                            @Override
+                                            public void caretRemoved(CaretEvent caretEvent) {
+
+                                            }
                                         });
-
-
                                     } else {
                                         System.out.println("NO EDITOR");
                                     }

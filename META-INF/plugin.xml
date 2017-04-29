@@ -11,16 +11,24 @@
     <name>Eclipse Mode</name>
     <id>EclipseMode</id>
     <description>Enable Eclipse features in IntelliJ IDEA such as incremental compilation.</description>
-    <version>0.1.1</version>
+    <version>1.0.0</version>
     <vendor>Alexey Efimov</vendor>
     <idea-version since-build="9000"/>
+
+    <change-notes>
+    <![CDATA[<html>
+      <ul>
+        <li>1.0.0: Upgrade version to support IDEA 2017.1 (build 171.3780.107).</li>
+      </ul>
+    </html>]]>
+    </change-notes>
 
     <extensions xmlns="com.intellij">
         <applicationService serviceInterface="org.intellij.trinkets.eclipseMode.settings.EclipseModeSettings"
                             serviceImplementation="org.intellij.trinkets.eclipseMode.settings.EclipseModeSettings"/>
         <applicationConfigurable implementation="org.intellij.trinkets.eclipseMode.settings.EclipseModeConfigurable"/>
     </extensions>
-    
+
     <application-components>
         <component>
             <implementation-class>org.intellij.trinkets.eclipseMode.EclipseMode</implementation-class>
